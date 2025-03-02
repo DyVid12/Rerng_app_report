@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    android:padding="16dp"
+    tools:context=".AboutUsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- App Logo -->
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/logo1"
+            android:contentDescription="App Logo"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:elevation="8dp"
+            android:translationZ="8dp"
+            android:scaleType="centerCrop"
+            android:background="#FFFFFF" />
+
+        <!-- App Title -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About Rerng App"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#FF5722"
+            android:layout_marginBottom="16dp"
+            app:fontFamily="@font/roboto_family" />
+
+        <!-- App Description -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp"
+            app:cardBackgroundColor="#1E1E1E">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rerng _រឿង is an Android app designed to help users track movies, rate them, and write reviews effortlessly. Users can search for movies by category and title, making it easier to find films that match their interests. The app also provides features for movie tracking, rating  reviews, and adding movies to favorites, allowing users to create a personalized movie collection and enhance their viewing experience."
+                android:textSize="16sp"
+                android:textColor="#FFFFFF"
+                android:padding="16dp"
+                android:lineSpacingExtra="4dp"
+                android:gravity="center"
+                 />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FF5722"
+            android:layout_marginVertical="16dp" />
+
+        <!-- Developer Section -->
+
+        <!-- Developer Info -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Meet the Developer"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:fontFamily="blod" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp"
+            app:cardBackgroundColor="#1E1E1E">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Soeurm Ravit is an Information Technology Engineering student at the Royal University of Phnom Penh (RUPP). Passionate about technology and innovation, he specializes in Android mobile development, UI/UX design, and software engineering."
+                android:textSize="16sp"
+                android:textColor="#FFFFFF"
+                android:padding="16dp"
+                android:lineSpacingExtra="4dp"
+                android:gravity="center"
+                 />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FF5722"
+            android:layout_marginVertical="16dp" />
+
+        <!-- Contact Section -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Get in Touch"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#FF5722"
+            android:layout_marginBottom="16dp"
+            app:fontFamily="bold" />
+
+        <!-- Contact Details -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp"
+            app:cardBackgroundColor="#1E1E1E">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Facebook -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_facebook"
+                        android:contentDescription="Facebook Icon"
+                        android:layout_marginEnd="12dp"
+                         />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvFacebook"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="facebook.com/Vid"
+                        android:textColor="#3b5998"
+                        android:textSize="16sp"
+                        app:fontFamily="blod" />
+                </LinearLayout>
+
+                <!-- Email -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_email"
+                        android:contentDescription="Email Icon"
+                        android:layout_marginEnd="12dp"
+                         />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="vitra1812@gmail.com"
+                        android:textColor="#D32F2F"
+                        android:textSize="16sp"
+                        app:fontFamily="@drawble/roboto_medium" />
+                </LinearLayout>
+
+                <!-- Phone -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_phone"
+                        android:contentDescription="Phone Icon"
+                        android:layout_marginEnd="12dp"
+                         />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+855 88 964 6724"
+                        android:textColor="#4CAF50"
+                        android:textSize="16sp"
+                        app:fontFamily="blod" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Footer -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thank you for using Rerng App! 🎬"
+            android:textSize="16sp"
+            android:textColor="#757575"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:padding="16dp"
+            android:layout_marginTop="24dp"
+            app:fontFamily="blod" />
+    </LinearLayout>
+</ScrollView>
