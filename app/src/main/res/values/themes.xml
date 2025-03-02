@@ -6,4 +6,14 @@
     </style>
 
     <style name="Theme.Rerng_app_report_project" parent="Base.Theme.Rerng_app_report_project" />
+
+    <style name="RoundedCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">30dp</item> <!-- Adjust for roundness -->
+    </style>
+    <style name="roundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
 </resources>

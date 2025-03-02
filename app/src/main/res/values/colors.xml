@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#F7F7F7</color>
+    <color name="darker_gray">#ABAAA5</color>
+
+    <color name="button_default">#800080</color> <!-- Purple -->
+    <color name="button_selected">#32CD32</color> <!-- Light Green -->
+
+
+
 </resources>
+

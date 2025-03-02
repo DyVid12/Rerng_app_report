@@ -1,16 +1,19 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+
 }
+
 
 android {
     namespace = "com.example.rerng_app_report_project"
-    compileSdk = 34
+    compileSdk = 35 // Remove compileSdkVersion, it's redundant
 
     defaultConfig {
         applicationId = "com.example.rerng_app_report_project"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35 // Remove targetSdkVersion
+
         versionCode = 1
         versionName = "1.0"
 
@@ -25,6 +28,11 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+
+    buildFeatures{
+        viewBinding = true
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -54,4 +62,21 @@ dependencies {
 
     implementation("androidx.activity:activity-ktx:1.7.2")
     implementation("androidx.fragment:fragment-ktx:1.5.7")
+
+    implementation ("androidx.appcompat:appcompat:1.6.1")
+    implementation ("com.google.android.material:material:1.9.0")
+
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
+
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
+
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    implementation("com.google.android.material:material:1.10.0")
+
+
 }
