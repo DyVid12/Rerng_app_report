@@ -13,40 +13,6 @@
         android:layout_height="wrap_content"
         android:padding="5dp">
 
-        <!-- Search Bar -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingBottom="10dp"
-            android:paddingHorizontal="10dp">
-
-            <EditText
-                android:id="@+id/searchEditText"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="40dp"
-                android:hint="Search movies..."
-                android:padding="10dp"
-                android:background="@drawable/search_background"
-                android:textColor="@color/white"
-                android:textColorHint="@color/darker_gray"
-                android:drawablePadding="8dp"
-                android:drawableStart="@android:drawable/ic_menu_search"
-                android:inputType="text"/>
-
-            <Button
-                android:id="@+id/searchButton"
-                android:layout_width="90dp"
-                android:layout_height="40dp"
-                android:text="Search"
-                android:textSize="12sp"
-                android:layout_marginStart="10dp"
-                android:backgroundTint="#6200EE"
-                android:textColor="@color/white"/>
-        </LinearLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerSearchResults"
             android:layout_width="match_parent"
@@ -70,8 +36,8 @@
 
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="250dp"
-                    android:layout_height="150dp"
+                    android:layout_width="210dp"
+                    android:layout_height="130dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
                     android:scaleType="centerCrop"
@@ -79,8 +45,9 @@
                     app:shapeAppearanceOverlay="@style/RoundedCorners" />
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="250dp"
-                    android:layout_height="150dp"
+                    android:layout_width="210dp"
+                    android:layout_height="130dp"
+                   android:foregroundGravity="center"
                     android:scaleType="centerCrop"
                     android:src="@drawable/avotar"
                     android:layout_marginRight="10dp"
@@ -89,8 +56,8 @@
 
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="250dp"
-                    android:layout_height="150dp"
+                    android:layout_width="210dp"
+                    android:layout_height="130dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/venomimage"
                     android:layout_marginRight="10dp"
@@ -118,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal" />
 
         <TextView
             android:layout_marginTop="5dp"
@@ -234,6 +201,8 @@
 
         </LinearLayout>
 
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
+

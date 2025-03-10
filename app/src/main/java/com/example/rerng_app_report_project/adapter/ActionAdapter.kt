@@ -42,11 +42,6 @@ class ActionAdapter : ListAdapter<Movy, ActionAdapter.ActionViewHolder>(ActionDi
                         putExtra("title", movy.title)
                         putExtra("overview", movy.movie_detail.overview)
                         putExtra("trailer_url", movy.movie_detail.trailer_url)
-
-                        // Handle rating correctly
-                        val ratingValue = movy.movie_detail.rating ?: movy.rating ?: 0.0 // Default 0.0 if null
-                        Log.d("ActionAdapter", "Passing Rating: $ratingValue")
-                        putExtra("rating", ratingValue.toString()) // Convert to string before passing
                     }
                     context.startActivity(intent)
                 }

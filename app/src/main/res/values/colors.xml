@@ -7,6 +7,19 @@
 
     <color name="button_default">#800080</color> <!-- Purple -->
     <color name="button_selected">#32CD32</color> <!-- Light Green -->
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="gray_500">#FF9E9E9E</color>
+    <color name="gray_700">#FF616161</color>
+    <color name="red_500">#FFEB3B</color>
+    <color name="neon_blue">#00E5FF</color>
+    <color name="dark_background">#121212</color>
+    <color name="primary">#6200EE</color> <!-- Purple Shade -->
+    <color name="light_gray">#F5F5F5</color> <!-- Light Gray Background -->
+
+
+
+
+
 
 
 

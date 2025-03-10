@@ -1,3 +1,4 @@
+import com.example.rerng_app_report_project.Models_rerngApp.MovieDetail
 import com.google.gson.annotations.SerializedName
 
 data class MovieResponse(

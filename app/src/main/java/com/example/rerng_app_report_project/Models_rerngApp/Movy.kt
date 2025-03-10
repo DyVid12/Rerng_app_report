@@ -1,12 +1,11 @@
 package com.example.rerng_app_report_project.Models_rerngApp
 
 data class Movy(
-    val genres: List<String>,
     val id: Int,
-    val movie_detail: MovieDetail,
+    val title: String,
+    val release_date: String,
     val poster: String,
-    val rating: Double?,
-    val release_date: String?,
-    val title: String?
+    val rating: Float,
+    val genres: List<String>,
+    val movie_detail: MovieDetail
 )
-

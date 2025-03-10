@@ -24,6 +24,9 @@ class MovieDetailActivity : AppCompatActivity() {
         val rating = findViewById<TextView>(R.id.txtRating)
         val overview = findViewById<TextView>(R.id.txtOverview)
         val btnTrailer = findViewById<Button>(R.id.btnWatchTrailer)
+        val btnAddReview = findViewById<Button>(R.id.btnAddReview)
+        val btnAddToWatchlist = findViewById<Button>(R.id.btnAddToWatchlist)
+        val txtBackToList = findViewById<TextView>(R.id.txtBackToList)
 
         // Get data from Intent
         val movieTitle = intent.getStringExtra("title")
@@ -61,6 +64,25 @@ class MovieDetailActivity : AppCompatActivity() {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl))
                 startActivity(intent)
             }
+        }
+
+        // Handle "Back to Movie List" click
+        txtBackToList.setOnClickListener {
+            onBackPressed() // This will take the user back to the previous screen (Movie List)
+        }
+
+        // Handle "Add Review" button click
+        btnAddReview.setOnClickListener {
+            // Logic to open a review dialog or activity to add reviews
+            Log.d("MovieDetailActivity", "Add Review clicked")
+            // You can start a new activity or show a dialog to add the review.
+        }
+
+        // Handle "Add to Watchlist" button click
+        btnAddToWatchlist.setOnClickListener {
+            // Logic to add the movie to a watchlist
+            Log.d("MovieDetailActivity", "Add to Watchlist clicked")
+            // You can save this movie to a local database or shared preferences.
         }
     }
 }

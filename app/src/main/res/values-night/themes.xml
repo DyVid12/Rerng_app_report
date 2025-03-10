@@ -9,4 +9,8 @@
         <item name="cornerSize">20dp</item> <!-- Adjust for roundness -->
     </style>
 
+    <style name="RoundedCorners2">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">18dp</item> <!-- Adjust for roundness -->
+    </style>
 </resources>

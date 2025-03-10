@@ -5,6 +5,7 @@ class APIState<T>(
     val state: State,
     val movies: T? = null,
     val errorMessage: String? = null
+
 )
 
 enum class State {
