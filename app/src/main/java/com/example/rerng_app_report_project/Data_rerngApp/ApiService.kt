@@ -14,10 +14,9 @@ interface ApiService {
     @GET("/Movie_data/")
     suspend fun getMovies(): APIResponse<List<Movy>>
 
-    @GET("/Movie_data/search_movies_by_category/{category}/")  // Corrected endpoint
+    @GET("/Movie_data/search_movies_by_category/{category}/")
     suspend fun searchMovies(
-        @Path("category") category: String,
-        @Query("q") query: String
+        @Path("category") category: String  // Category directly in the URL
     ): APIResponse<List<Movy>>
 
     @POST("/Authorization/login")

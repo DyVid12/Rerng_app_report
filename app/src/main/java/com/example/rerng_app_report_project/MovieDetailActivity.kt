@@ -28,6 +28,8 @@ class MovieDetailActivity : AppCompatActivity() {
         val btnAddToWatchlist = findViewById<Button>(R.id.btnAddToWatchlist)
         val txtBackToList = findViewById<TextView>(R.id.txtBackToList)
 
+        Log.d("MovieDetailActivity", "Overview: $overview")
+
         // Get data from Intent
         val movieTitle = intent.getStringExtra("title")
         val movieReleaseDate = intent.getStringExtra("release_date")
