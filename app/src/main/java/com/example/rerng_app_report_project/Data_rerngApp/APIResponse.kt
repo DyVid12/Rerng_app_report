@@ -12,6 +12,9 @@ class APIResponse<T>(
 
 
     )
+// Define a data class for the API response
+
+
 
 
 

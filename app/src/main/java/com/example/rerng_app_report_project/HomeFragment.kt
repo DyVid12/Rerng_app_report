@@ -71,6 +71,7 @@ class HomeFragment : Fragment() {
                     Log.e("HomeFragment", "❌ API Error occurred.")
                     Toast.makeText(context, "Error loading data. Please try again", Toast.LENGTH_LONG).show()
                 }
+
             }
         }
 

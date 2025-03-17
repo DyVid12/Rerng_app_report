@@ -16,6 +16,7 @@
         <item>Comedy</item>
         <item>Adventure</item>
     </string-array>
+
     <style name="CircularImage">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item> <!-- 50% makes it circular -->

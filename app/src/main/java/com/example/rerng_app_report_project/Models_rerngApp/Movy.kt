@@ -7,6 +7,6 @@ data class Movy(
     val poster: String,
     val rating: Float,
     val genres: List<String>,
-    val overview: String,
+    val overview: String?,
     val movie_detail: MovieDetail
 )

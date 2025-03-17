@@ -80,7 +80,7 @@
         android:id="@+id/txtOverview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Movie overview goes here..."
+        android:text="This is a test overview."
         android:textSize="14sp"
         android:textColor="#E0E0E0"
         android:layout_marginBottom="16dp" />
