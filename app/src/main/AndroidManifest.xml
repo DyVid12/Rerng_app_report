@@ -22,7 +22,11 @@
 
         <!-- Activities -->
         <activity android:name=".SignUpActivity" android:exported="false" />
-        <activity android:name=".LoginActivity" android:exported="false" />
+        <activity android:name=".LoginActivity">
+
+        </activity>
+
+
         <activity android:name=".MovieDetailActivity" android:exported="false" />
 
         <activity android:name=".IntroActivity" android:exported="true">
