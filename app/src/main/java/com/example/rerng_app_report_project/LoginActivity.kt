@@ -1,118 +1,87 @@
 package com.example.rerng_app_report_project
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
-import com.example.rerng_app_report_project.Data_rerngApp.State
-import com.example.rerng_app_report_project.ViewModels.LoginViewModels
+import androidx.lifecycle.lifecycleScope
+import com.example.rerng_app_report_project.Models_rerngApp.LoginModels
 import com.example.rerng_app_report_project.databinding.ActivityLoginBinding
-import com.example.rerng_app_report_project.global.AppEncrypted
-import com.example.rerng_app_report_project.global.AppPref
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private val loginViewModel: LoginViewModels by viewModels()
-
-    // Register the result launcher for login activity
-    private val activityLoginResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                finish()  // Close LoginActivity if user logged in
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupUi()
-        loadBackgroundImage() // Load the background image here
-        setupListeners()
-        observeViewModel()
-    }
-
-    private fun setupUi() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-    }
 
-    private fun loadBackgroundImage() {
-        Glide.with(this)
-            .load(R.drawable.hero_image) // Your background image resource
-            .override(1080, 1920) // Resize to prevent memory overload
-            .into(binding.backgroundImage) // Your ImageView
+        setupListeners()
     }
 
     private fun setupListeners() {
         binding.loginButton.setOnClickListener {
             attemptLogin()
         }
-    }
 
-    private fun observeViewModel() {
-        loginViewModel.loginState.observe(this) { state ->
-            binding.progressBar.visibility = View.GONE
-            when (state.state) {
-                State.SUCCESS -> {
-                    handleSuccess(state.movies!!)  // Ensure movies field is properly handled
-                }
-                State.ERROR -> {
-                    showAlert("Sign In", state.errorMessage ?: "An unknown error occurred.")
-                }
-            }
+        // Add the OnClickListener for "Sign Up" text
+        binding.signupTextView.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
         }
     }
+
 
     private fun attemptLogin() {
         val username = binding.usernameEditText.text.toString().trim()
         val password = binding.passwordEditText.text.toString().trim()
 
         if (username.isEmpty() || password.isEmpty()) {
-            showAlert("Invalid Input", "Please enter both username and password!")
+            showAlert("Invalid Input", "Please fill in all fields!")
         } else {
             binding.progressBar.visibility = View.VISIBLE
-            loginViewModel.login(username, password)
-        }
-    }
 
-    private fun handleSuccess(authRes: AuthenticationRes) {
-        AppPref.get().setLoggedIn(this, true)
-        val token = authRes.access ?: ""
-        if (token.isNotEmpty()) {
-            AppEncrypted.get().storeToken(this, token)
-        }
+            // Call the signIn API
+            val loginRequest = LoginModels(username, password)
+            lifecycleScope.launch {
+                try {
+                    val response = RetrofitInstance.apiService.signIn(loginRequest)
+                    if (response.isSuccessful) {
+                        val authRes = response.body() // This is AuthenticationRes
 
-        val username = binding.usernameEditText.text.toString().trim()
-        val password = binding.passwordEditText.text.toString().trim()
-        AppPref.get().apply {
-            setUserName(this@LoginActivity, username)
-            setPassword(this@LoginActivity, password)
-        }
+                        // Check if the response body contains user data
+                        if (authRes != null && authRes.user != null) {
+                            // Show a toast and navigate to the ProfileActivity with user details
+                            Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_LONG).show()
 
-        Toast.makeText(this, "Sign In Successful", Toast.LENGTH_LONG).show()
-
-        // Set result to notify ProfileFragment
-        setResult(Activity.RESULT_OK)
-        finish() // Close LoginActivity
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        if (AppPref.get().isLoggedIn(this)) {
-            setResult(Activity.RESULT_OK) // Notify ProfileFragment about login success
-            finish() // Close LoginActivity
+                            val user = authRes.user
+                            val intent = Intent(this@LoginActivity, ProfileActivity::class.java).apply {
+                                // Pass user data to ProfileActivity
+                                putExtra("username", user.username)
+                                putExtra("email", user.email)
+                                putExtra("gender", user.gender)
+                            }
+                            startActivity(intent)
+                            finish() // Optional: Finish LoginActivity to prevent going back
+                        } else {
+                            showAlert("Error", "Failed to fetch user data.")
+                        }
+                    } else {
+                        showAlert("Login Failed", "Invalid credentials.")
+                    }
+                } catch (e: Exception) {
+                    showAlert("Error", "An error occurred while logging in.")
+                } finally {
+                    binding.progressBar.visibility = View.GONE
+                }
+            }
         }
     }
 
     private fun showAlert(title: String, message: String) {
-        AlertDialog.Builder(this)
+        androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }

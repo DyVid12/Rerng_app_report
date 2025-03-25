@@ -29,6 +29,6 @@ interface ApiService {
     suspend fun signIn(@Body loginModels: LoginModels): Response<AuthenticationRes>
 
     @POST("/Authorization/register")
-    suspend fun signUp(@Body signUpRequest: RegisterModels): APIResponse<AuthenticationRes>
+    suspend fun signUp(@Body signUpRequest: RegisterModels): Response<AuthenticationRes>
 
 }
