@@ -4,7 +4,6 @@ import com.example.rerng_app_report_project.AuthenticationRes
 import com.example.rerng_app_report_project.Models_rerngApp.LoginModels
 import com.example.rerng_app_report_project.Models_rerngApp.Movy
 import com.example.rerng_app_report_project.Models_rerngApp.RegisterModels
-import com.example.rerng_app_report_project.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
