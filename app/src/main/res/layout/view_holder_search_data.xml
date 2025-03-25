@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <!-- Movie Poster Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/poster"
+            android:layout_width="140dp"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/begman"
+            app:shapeAppearanceOverlay="@style/RoundedCorners"
+            app:strokeColor="#504B38"
+            app:strokeWidth="3dp" />
+
+        <!-- Movie Title -->
+        <TextView
+            android:id="@+id/tittleposter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="Movie Title"
+            android:textColor="#FFD700"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <!-- Release Date -->
+        <TextView
+            android:id="@+id/relistdateposter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:text="22-02-2025"
+            android:textColor="#ABAAA5"
+            android:textSize="9sp" />
+
+        <!-- Movie Rating -->
+        <TextView
+            android:id="@+id/movieratingposter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="⭐ 4.5"
+            android:textColor="#FFD700"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</LinearLayout>
