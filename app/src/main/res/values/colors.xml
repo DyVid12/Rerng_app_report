@@ -12,9 +12,34 @@
     <color name="gray_700">#FF616161</color>
     <color name="red_500">#FFEB3B</color>
     <color name="neon_blue">#00E5FF</color>
-    <color name="dark_background">#121212</color>
+    <color name="primary_dark">#3700B3</color>
+
     <color name="primary">#6200EE</color> <!-- Purple Shade -->
-    <color name="light_gray">#F5F5F5</color> <!-- Light Gray Background -->
+    <color name="light_gray">#F5F5F5</color>
+    <color name="yellow">#D98324</color> <!-- Light Gray Background -->
+    <color name="primary_color">#3F51B5</color>  <!-- Material Indigo 500 -->
+    <!-- Option 1: Standard Material hint (recommended) -->
+    <color name="hint_color">#6200EE</color>  <!-- When focused -->
+    <color name="hint_color_unfocused">#99000000</color>  <!-- 60% opacity black -->
+
+    <color name="divider_color">#1F000000</color>
+    <color name="text_primary">#DE000000</color>
+    <color name="primary_light">#C5CAE9</color>
+    <color name="surface_light">#F5F5F5</color> <!-- Light gray, adjust as needed -->
+    <color name="dark_background">#000000</color> <!-- Example color, you can change it -->
+
+
+
+
+    <!-- Surface Light Transparent Color -->
+    <color name="surface_light_transparent">#F5F5F5</color>
+
+    <color name="transparent">#00000000</color>
+
+
+    <!-- Hint Light Color -->
+    <color name="hint_light">#9E9E9E</color> <!-- Example color, you can change it -->
+
 
 
 

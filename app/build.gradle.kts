@@ -77,4 +77,6 @@ dependencies {
 
     // Security & Encryption
     implementation("androidx.security:security-crypto:1.1.0-alpha05")
+
+    implementation ("androidx.cardview:cardview:1.0.0")
 }

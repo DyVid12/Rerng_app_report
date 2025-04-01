@@ -7,15 +7,23 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 
 class MovieDetailActivity : AppCompatActivity() {
+    private var movieId: Int = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_movie_detail)
+
+        movieId = intent.getIntExtra("MOVIE_ID", -1)
+
+        // Log the received movieId for debugging
+        Log.d("MovieDetailActivity", "Received movieId: $movieId")
 
         // Find views
         val poster = findViewById<ImageView>(R.id.imgMoviePoster)
@@ -28,9 +36,6 @@ class MovieDetailActivity : AppCompatActivity() {
         val btnAddToWatchlist = findViewById<Button>(R.id.btnAddToWatchlist)
         val txtBackToList = findViewById<TextView>(R.id.txtBackToList)
 
-        Log.d("MovieDetailActivity", "Overview: $overview")
-
-
         // Get data from Intent
         val movieTitle = intent.getStringExtra("title")
         val movieReleaseDate = intent.getStringExtra("release_date")
@@ -38,28 +43,31 @@ class MovieDetailActivity : AppCompatActivity() {
         val movieRating = intent.getStringExtra("rating")
         val trailerUrl = intent.getStringExtra("trailer_url")
         val posterUrl = intent.getStringExtra("poster")
+        val movieId = intent.getIntExtra("MOVIE_ID", -1)  // Get movie ID
 
+        // Log received values for debugging
+        Log.d("MovieDetailActivity", "Received movie ID: $movieId")
         Log.d("MovieDetailActivity", "Received Rating: $movieRating")
         Log.d("MovieDetailActivity", "Received Poster URL: $posterUrl")
+        Log.d("MovieDetailActivity", "Received movie ID: $movieId")
 
         // Set data to views
         title.text = movieTitle
         releaseDate.text = "Release Date: $movieReleaseDate"
         overview.text = movieOverview
-
-        // Fix rating display
         rating.text = if (!movieRating.isNullOrEmpty()) "⭐ $movieRating /10" else "Rating: N/A"
 
         // Load poster
         if (!posterUrl.isNullOrEmpty()) {
             Glide.with(this)
                 .load(posterUrl)
-                .placeholder(R.drawable.begman) // Make sure this exists in res/drawable
+                .placeholder(R.drawable.begman) // Default image
                 .into(poster)
         } else {
             Log.e("MovieDetailActivity", "Poster URL is null or empty!")
             poster.setImageResource(R.drawable.begman) // Default image
         }
+
 
         // Handle trailer button click
         btnTrailer.setOnClickListener {
@@ -71,19 +79,28 @@ class MovieDetailActivity : AppCompatActivity() {
 
         // Handle "Back to Movie List" click
         txtBackToList.setOnClickListener {
-            onBackPressed() // This will take the user back to the previous screen (Movie List)
+            onBackPressed() // Go back to the previous screen
         }
 
         // Handle "Add Review" button click
         btnAddReview.setOnClickListener {
-            // Logic to open a review dialog or activity to add reviews
-            Log.d("MovieDetailActivity", "Add Review clicked")
-            // You can start a new activity or show a dialog to add the review.
+            if (movieId != -1) {
+                Log.d("MovieDetailActivity", "Passing movie ID: $movieId")  // Log for debugging
+                val intent = Intent(this, AddReviewActivity::class.java)
+                intent.putExtra("MOVIE_ID", movieId)  // Pass movie ID to the review activity
+                startActivity(intent)
+            } else {
+                Log.e("MovieDetailActivity", "Error: Invalid Movie ID passed!")
+                Toast.makeText(this, "Error: Invalid Movie ID", Toast.LENGTH_SHORT).show()
+            }
         }
+
+
+
+
 
         // Handle "Add to Watchlist" button click
         btnAddToWatchlist.setOnClickListener {
-            // Logic to add the movie to a watchlist
             Log.d("MovieDetailActivity", "Add to Watchlist clicked")
             // You can save this movie to a local database or shared preferences.
         }

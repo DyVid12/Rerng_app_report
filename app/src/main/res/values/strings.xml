@@ -20,5 +20,16 @@
     <style name="CircularImage">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item> <!-- 50% makes it circular -->
+
     </style>
+
+    <!-- Other strings -->
+    <string-array name="gender_options">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
+
+
 </resources>

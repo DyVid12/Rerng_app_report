@@ -1,59 +1,87 @@
 package com.example.rerng_app_report_project
 
+import Movie
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.rerng_app_report_project.adapter.FavoriteMoviesAdapter
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FavoriteFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FavoriteFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var favoriteMoviesRecyclerView: RecyclerView
+    private lateinit var favoriteMoviesAdapter: FavoriteMoviesAdapter
+    private var favoriteMovies: List<Movie> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+        val view = inflater.inflate(R.layout.fragment_favorite, container, false)
+
+        favoriteMoviesRecyclerView = view.findViewById(R.id.favoriteMoviesRecyclerView)
+        favoriteMoviesAdapter = FavoriteMoviesAdapter(favoriteMovies)
+        favoriteMoviesRecyclerView.layoutManager = LinearLayoutManager(context)
+        favoriteMoviesRecyclerView.adapter = favoriteMoviesAdapter
+
+        checkUserTokenAndFetchMovies()
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FavoriteFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FavoriteFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun checkUserTokenAndFetchMovies() {
+        val sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("user_token", null)
+
+        // Debug: Check if the token is being retrieved
+        Log.d("SharedPreferences", "Retrieved token: $token")
+
+        if (token.isNullOrEmpty()) {
+            Log.e("FavoriteFragment", "User is not logged in (Token is null or empty)")
+            Toast.makeText(context, "User is not logged in", Toast.LENGTH_SHORT).show()
+        } else {
+            Log.d("FavoriteFragment", "Token exists. Fetching movies...")
+            getFavoriteMovies(token)
+        }
+    }
+
+    private fun getFavoriteMovies(token: String) {
+        val apiService = ApiClient.apiService
+
+        lifecycleScope.launch {
+            try {
+                Log.d("FavoriteFragment", "Using Token: $token")
+
+                val response = apiService.getWatchlist("Bearer $token") // Send token in header
+
+                if (response.isSuccessful) {
+                    val apiResponse = response.body()
+                    Log.d("FavoriteFragment", "API Response: ${response.body()}")
+
+                    if (apiResponse != null && apiResponse.movies != null) {
+                        val favoriteMoviesList = apiResponse.movies
+                        Log.d("FavoriteFragment", "Movies count: ${favoriteMoviesList.size}")
+                        favoriteMoviesAdapter.updateData(favoriteMoviesList)
+                    } else {
+                        Log.e("FavoriteFragment", "No movies found in response")
+                        Toast.makeText(context, "No favorite movies found", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Log.e("FavoriteFragment", "Failed to load favorite movies: ${response.errorBody()}")
+                    Toast.makeText(context, "Failed to load favorite movies", Toast.LENGTH_SHORT).show()
                 }
+            } catch (e: Exception) {
+                Log.e("FavoriteFragment", "Error fetching favorite movies: ${e.message}", e)
+                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+        }
     }
 }

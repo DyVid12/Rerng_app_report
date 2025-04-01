@@ -3,9 +3,11 @@ package com.example.rerng_app_report_project
 
 // AuthenticationRes.kt
 data class AuthenticationRes(
-    val token: String,
+    val access: String,  // Change from "token" to "access"
+    val refresh: String,
     val user: User
 )
+
 
 
 
