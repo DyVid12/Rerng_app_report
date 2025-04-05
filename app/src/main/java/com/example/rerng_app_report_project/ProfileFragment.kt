@@ -90,12 +90,12 @@ class ProfileFragment : Fragment() {
 
         val username = AppPref.get().getUserName(requireContext()) // Use binding
         val email = AppPref.get().getEmail(requireContext()) // Use binding
-        val gender = AppPref.get().getGender(requireContext()) // Use binding
+
 
         // Update the TextViews with the data from AppPref
         binding.usernameTextView.text = " $username"
         binding.emailTextView.text = " $email"
-        binding.genderTextView.text = " $gender"
+
     }
 
 

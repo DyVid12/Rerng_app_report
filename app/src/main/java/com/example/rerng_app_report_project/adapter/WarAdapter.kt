@@ -16,7 +16,7 @@ class WarAdapter : ListAdapter<Movy, WarAdapter.WarViewHolder>(WarDiffUtil) {
 
     class WarViewHolder(private val binding: ViewHolderDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindActionDataMovie(movy: Movy) {
+        fun bindWarDataMovie(movy: Movy) {
             if (!movy.poster.isNullOrEmpty()) {
                 val baseUrl = "http://10.0.2.2:8000/" // Replace with actual base URL
                 val posterUrl = if (movy.poster.startsWith("http")) movy.poster else "$baseUrl${movy.poster}"
@@ -39,6 +39,7 @@ class WarAdapter : ListAdapter<Movy, WarAdapter.WarViewHolder>(WarDiffUtil) {
                         putExtra("poster", posterUrl) // ✅ Use correct URL
                         putExtra("release_date", movy.release_date)
                         putExtra("title", movy.title)
+                        putExtra("MOVIE_ID", movy.id)
                         putExtra("overview", movy.movie_detail.overview)
                         putExtra("rating", movy.rating)
                         putExtra("trailer_url", movy.movie_detail.trailer_url)
@@ -64,7 +65,7 @@ class WarAdapter : ListAdapter<Movy, WarAdapter.WarViewHolder>(WarDiffUtil) {
     }
 
     override fun onBindViewHolder(holder: WarViewHolder, position: Int) {
-        holder.bindActionDataMovie(getItem(position))
+        holder.bindWarDataMovie(getItem(position))
     }
 }
 

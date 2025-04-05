@@ -16,7 +16,7 @@ class FantasyAdapter : ListAdapter<Movy, FantasyAdapter.FantasyViewHolder>(Fanta
 
     class FantasyViewHolder(private val binding: ViewHolderDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindActionDataMovie(movy: Movy) {
+        fun bindFantasyDataMovie(movy: Movy) {
             if (!movy.poster.isNullOrEmpty()) {
                 val baseUrl = "http://10.0.2.2:8000/" // Replace with actual base URL
                 val posterUrl = if (movy.poster.startsWith("http")) movy.poster else "$baseUrl${movy.poster}"
@@ -41,6 +41,7 @@ class FantasyAdapter : ListAdapter<Movy, FantasyAdapter.FantasyViewHolder>(Fanta
                         putExtra("title", movy.title)
                         putExtra("overview", movy.movie_detail.overview)
                         putExtra("rating", movy.rating)
+                        putExtra("MOVIE_ID", movy.id)
                         putExtra("trailer_url", movy.movie_detail.trailer_url)
                         val ratingValue = movy.movie_detail.rating ?: movy.rating ?: 0.0 // Default 0.0 if null
                         Log.d("FantasyAdapter ", "Passing Rating: $ratingValue")
@@ -64,7 +65,7 @@ class FantasyAdapter : ListAdapter<Movy, FantasyAdapter.FantasyViewHolder>(Fanta
     }
 
     override fun onBindViewHolder(holder: FantasyViewHolder, position: Int) {
-        holder.bindActionDataMovie(getItem(position))
+        holder.bindFantasyDataMovie(getItem(position))
     }
 }
 

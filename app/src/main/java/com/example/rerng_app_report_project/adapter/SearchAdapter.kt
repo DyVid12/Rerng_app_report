@@ -44,6 +44,7 @@ class SearchAdapter : ListAdapter<Movy, SearchAdapter.SearchViewHolder>(SearchDi
                     putExtra("poster", posterUrl)
                     putExtra("release_date", movy.release_date)
                     putExtra("title", movy.title)
+                    putExtra("MOVIE_ID", movy.id)
                     putExtra("overview", overview)  // ✅ Ensure correct overview is passed
                     putExtra("trailer_url", movy.movie_detail?.trailer_url ?: "")
                     putExtra("rating", ratingValue.toString())

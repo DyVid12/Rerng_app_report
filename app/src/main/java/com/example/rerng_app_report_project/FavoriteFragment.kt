@@ -1,6 +1,5 @@
 package com.example.rerng_app_report_project
 
-import Movie
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -13,13 +12,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rerng_app_report_project.adapter.FavoriteMoviesAdapter
+import com.example.rerng_app_report_project.Models_rerngApp.Movie
 import kotlinx.coroutines.launch
 
 class FavoriteFragment : Fragment() {
 
     private lateinit var favoriteMoviesRecyclerView: RecyclerView
     private lateinit var favoriteMoviesAdapter: FavoriteMoviesAdapter
-    private var favoriteMovies: List<Movie> = mutableListOf()
+    private var favoriteMovies: List<Movie> = mutableListOf() // Use the correct Movie class
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +67,7 @@ class FavoriteFragment : Fragment() {
                     Log.d("FavoriteFragment", "API Response: ${response.body()}")
 
                     if (apiResponse != null && apiResponse.movies != null) {
-                        val favoriteMoviesList = apiResponse.movies
+                        val favoriteMoviesList = apiResponse.movies // This is a List<Movie>
                         Log.d("FavoriteFragment", "Movies count: ${favoriteMoviesList.size}")
                         favoriteMoviesAdapter.updateData(favoriteMoviesList)
                     } else {

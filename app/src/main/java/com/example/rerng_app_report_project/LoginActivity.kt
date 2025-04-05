@@ -3,6 +3,7 @@ package com.example.rerng_app_report_project
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -39,22 +40,27 @@ class LoginActivity : AppCompatActivity() {
                 State.SUCCESS -> handleSuccess(state.movies!!)
                 State.ERROR -> {
                     val errorMessage = state.errorMessage ?: "Invalid username or password"
-                    Log.d("Sign In", errorMessage)
+                    Log.e("LoginActivity", "Login failed: $errorMessage")
                     Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+                    binding.progressBar.visibility = View.GONE  // Hide progress bar on error
                 }
             }
         }
     }
 
-
     private fun attemptSignIn() {
         val username = binding.usernameEditText.text.toString().trim()
         val password = binding.passwordEditText.text.toString().trim()
 
+        // Show loading indicator while processing login
+        binding.progressBar.visibility = View.VISIBLE
+
         if (username.isEmpty() || password.isEmpty()) {
-            Log.d("Invalid Input", "Please enter both username and password!")
+            Log.e("LoginActivity", "Empty username or password")
             Toast.makeText(this, "Please enter both username and password", Toast.LENGTH_SHORT).show()
+            binding.progressBar.visibility = View.GONE  // Hide progress bar if input is invalid
         } else {
+            Log.d("LoginActivity", "Attempting login for user: $username")
             loginViewModels.login(username, password)
         }
     }
@@ -64,61 +70,67 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun handleSuccess(data: AuthenticationRes) {
-        Log.d("LoginActivity", "Received Access Token: ${data.access}")
+        Log.d("LoginActivity", "Full API Response: $data")
 
-        // Check if the access token is null or empty
+        // Check if the access token is valid
         if (data.access.isNullOrEmpty()) {
             Log.e("LoginActivity", "Access token is null or empty")
             Toast.makeText(this, "Login successful but token is missing", Toast.LENGTH_SHORT).show()
-            return  // Early exit to avoid calling storeToken with a null token
+            binding.progressBar.visibility = View.GONE  // Hide progress bar if token is missing
+            return
         }
 
-        // Proceed to store the access token if it's valid
+        // Store login state and token securely
         AppPref.get().setLoggedIn(this, true)
-        AppEncrypted.get().storeToken(this, data.access)
+        AppEncrypted.get().storeToken(this, data.access) // Store access token securely
 
-        // Save user credentials to preferences
-        val username = binding.usernameEditText.text.toString().trim()
-        val password = binding.passwordEditText.text.toString().trim()
+        // Save user ID and token in SharedPreferences
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
 
-        // Handle possible null values for email and gender
-        val email = data.user.email ?: "No Email"  // Default value if email is null
-        val gender = data.user.gender ?: "Not Available"  // Default value if gender is null
+        // Assuming 'data.user.id' is the user ID you received from the API
+        val userId = data.user.id ?: -1
+        val token = data.access
 
-        // Save username, password, email, and gender in AppPref
+        // Save the user ID and token to SharedPreferences
+        editor.putInt("USER_ID", userId)  // Save user ID
+        editor.putString("USER_TOKEN", token)  // Save token
+        editor.apply()
+
+        // Verify token storage
+        val storedToken = AppEncrypted.get().getToken(this)
+        Log.d("LoginActivity", "Stored Token after login: $storedToken")
+
+        // Save user credentials
+        val username = data.user.username ?: "No Username"
+        val email = data.user.email ?: "No Email"
+
         AppPref.get().apply {
             setUserName(this@LoginActivity, username)
-            setPassword(this@LoginActivity, password)
             setEmail(this@LoginActivity, email)
-            setGender(this@LoginActivity, gender)  // Pass a non-null value for gender
         }
 
+        // Show success message
         Toast.makeText(this, "Sign-In Successful", Toast.LENGTH_LONG).show()
 
+        // Redirect to main activity
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra("goToProfile", true)
+            putExtra("goToProfile", true) // Optionally pass data to go to profile
         }
         startActivity(intent)
     }
 
-
-
-
-
-
     override fun onResume() {
         super.onResume()
 
-        // Check if the user is already logged in
+        // Check if user is already logged in
         if (AppPref.get().isLoggedIn(this)) {
             Log.d("LoginActivity", "User already logged in. Redirecting to main screen.")
 
-            // Navigate to MainActivity or the screen containing ProfileFragment
-            val intent = Intent(this, MainActivity::class.java) // Change MainActivity to your actual main screen
+            val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
     }
-
 }

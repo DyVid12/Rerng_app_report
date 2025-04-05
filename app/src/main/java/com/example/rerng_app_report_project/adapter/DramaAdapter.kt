@@ -16,7 +16,7 @@ class DramaAdapter : ListAdapter<Movy, DramaAdapter.DramaViewHolder>(DramaDiffUt
 
     class DramaViewHolder(private val binding: ViewHolderDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindActionDataMovie(movy: Movy) {
+        fun bindDramaDataMovie(movy: Movy) {
             if (!movy.poster.isNullOrEmpty()) {
                 val baseUrl = "http://10.0.2.2:8000/" // Replace with actual base URL
                 val posterUrl = if (movy.poster.startsWith("http")) movy.poster else "$baseUrl${movy.poster}"
@@ -40,6 +40,7 @@ class DramaAdapter : ListAdapter<Movy, DramaAdapter.DramaViewHolder>(DramaDiffUt
                         putExtra("poster", posterUrl) // ✅ Use correct URL
                         putExtra("release_date", movy.release_date)
                         putExtra("title", movy.title)
+                        putExtra("MOVIE_ID", movy.id)
                         putExtra("overview", movy.movie_detail.overview)
                         putExtra("rating", movy.rating)
                         putExtra("trailer_url", movy.movie_detail.trailer_url)
@@ -65,7 +66,7 @@ class DramaAdapter : ListAdapter<Movy, DramaAdapter.DramaViewHolder>(DramaDiffUt
     }
 
     override fun onBindViewHolder(holder: DramaViewHolder, position: Int) {
-        holder.bindActionDataMovie(getItem(position))
+        holder.bindDramaDataMovie(getItem(position))
     }
 }
 

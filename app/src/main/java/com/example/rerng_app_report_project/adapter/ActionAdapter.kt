@@ -24,11 +24,13 @@ class ActionAdapter : ListAdapter<Movy, ActionAdapter.ActionViewHolder>(ActionDi
 
                 Log.d("Picasso", "Loading Image URL: $posterUrl")
 
+                // Optimized image loading
                 Picasso.get().load(posterUrl)
                     .into(binding.image1, object : com.squareup.picasso.Callback {
                         override fun onSuccess() {
                             Log.d("Picasso", "Image loaded successfully")
                         }
+
                         override fun onError(e: Exception?) {
                             Log.e("Picasso Error", "Failed to load image: ${e?.message}")
                         }
@@ -40,17 +42,25 @@ class ActionAdapter : ListAdapter<Movy, ActionAdapter.ActionViewHolder>(ActionDi
                         putExtra("poster", posterUrl)
                         putExtra("release_date", movy.release_date)
                         putExtra("title", movy.title)
+                        putExtra("MOVIE_ID", movy.id)
                         putExtra("overview", movy.movie_detail.overview)
                         putExtra("trailer_url", movy.movie_detail.trailer_url)
+
+                        // Use safest way to get rating
+                        val ratingValue = movy.movie_detail.rating ?: movy.rating ?: 0.0
+                        Log.d("ActionAdapter", "Passing Rating: $ratingValue")
+                        putExtra("rating", ratingValue.toString())
                     }
                     context.startActivity(intent)
                 }
+
             } else {
-                Log.e("Picasso Error", "Poster URL is empty or null!")
+                Log.e("ActionAdapter", "Poster URL is empty or null!")
             }
 
-            binding.tittlemovies.text = movy.title
-            binding.relistdate.text = "Release Date: ${movy.release_date}"
+            // Bind text views
+            binding.tittlemovies.text = movy.title ?: "No Title"
+            binding.relistdate.text = "Release Date: ${movy.release_date ?: "Unknown"}"
             binding.movieRating.text = "⭐ ${movy.rating ?: "N/A"} /10"
         }
     }

@@ -5,6 +5,9 @@
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Consider removing WRITE_EXTERNAL_STORAGE if not needed -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+
 
     <application
         android:allowBackup="true"

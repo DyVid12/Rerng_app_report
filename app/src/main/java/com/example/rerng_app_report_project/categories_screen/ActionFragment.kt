@@ -37,7 +37,6 @@ class ActionFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             layoutManager = GridLayoutManager(context, 2)
             adapter = actionAdapter
-            setHasFixedSize(true)
         }
 
         viewModel.dataState.observe(viewLifecycleOwner) { dataState ->

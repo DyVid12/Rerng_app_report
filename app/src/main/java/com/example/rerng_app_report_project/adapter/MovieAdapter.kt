@@ -40,6 +40,7 @@ class MovieAdapter : ListAdapter<Movy, MovieAdapter.DataMovieViewHolder>(DataMov
                         putExtra("poster", posterUrl) // ✅ Use correct URL
                         putExtra("release_date", movy.release_date)
                         putExtra("title", movy.title)
+                        putExtra("MOVIE_ID", movy.id)
                         putExtra("overview", movy.movie_detail.overview)
                         putExtra("rating", movy.rating)
                         putExtra("trailer_url", movy.movie_detail.trailer_url)
