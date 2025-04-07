@@ -80,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        // Store login state and token securely
+        // Save user credentials securely
         AppPref.get().setLoggedIn(this, true)
         AppEncrypted.get().storeToken(this, data.access) // Store access token securely
 
@@ -88,18 +88,15 @@ class LoginActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-        // Assuming 'data.user.id' is the user ID you received from the API
-        val userId = data.user.id ?: -1
-        val token = data.access
-
-        // Save the user ID and token to SharedPreferences
-        editor.putInt("USER_ID", userId)  // Save user ID
-        editor.putString("USER_TOKEN", token)  // Save token
+        // Remove existing token (if any) before saving new data
+        editor.remove("USER_TOKEN")
+        editor.putInt("USER_ID", data.user.id ?: -1) // Save user ID
+        editor.putString("USER_TOKEN", data.access)  // Save token
         editor.apply()
 
         // Verify token storage
-        val storedToken = AppEncrypted.get().getToken(this)
-        Log.d("LoginActivity", "Stored Token after login: $storedToken")
+        val storedToken = sharedPreferences.getString("USER_TOKEN", null)
+        Log.d("LoginActivity", "Stored Token: $storedToken")
 
         // Save user credentials
         val username = data.user.username ?: "No Username"
@@ -132,5 +129,18 @@ class LoginActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
+    }
+
+    // Add this function to clear the token and user session data
+    // Add this method to your ProfileFragment or wherever the logout occurs
+    fun logout() {
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear() // Clears all saved data like token and user ID
+        editor.apply()
+
+        // Redirect to login activity or wherever necessary
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish() // Optional: close current activity
     }
 }

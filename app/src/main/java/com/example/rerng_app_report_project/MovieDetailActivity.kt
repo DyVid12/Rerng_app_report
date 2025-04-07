@@ -1,11 +1,14 @@
 package com.example.rerng_app_report_project
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -17,6 +20,7 @@ import kotlinx.coroutines.launch
 
 class MovieDetailActivity : AppCompatActivity() {
     private var movieId: Int = -1
+    private lateinit var reviewContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +28,15 @@ class MovieDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_movie_detail)
 
         movieId = intent.getIntExtra("MOVIE_ID", -1)
+        reviewContainer = findViewById(R.id.reviewContainer)
+
+        val token = AppEncrypted.get().getToken(this)
+        if (!token.isNullOrEmpty() && movieId != -1) {
+            getMovieReviews(movieId, token)
+        } else {
+            Log.e("MovieDetailActivity", "Token or Movie ID is missing.")
+        }
+
 
         // Log the received movieId for debugging
         Log.d("MovieDetailActivity", "Received movieId: $movieId")
@@ -98,7 +111,6 @@ class MovieDetailActivity : AppCompatActivity() {
         }
 
 
-
         btnAddToWatchlist.setOnClickListener {
             Log.d("MovieDetailActivity", "Movie ID before add to watchlist: $movieId")
 
@@ -110,22 +122,21 @@ class MovieDetailActivity : AppCompatActivity() {
             }
 
             // Check if the user is logged in and the token is available
-            val token = AppEncrypted.get().getToken(this) // Fetch the token from secure storage
+            val token = AppEncrypted.get().getToken(this)  // Get token securely
             if (token.isNullOrEmpty()) {
                 Log.e("MovieDetailActivity", "User is not logged in. Token is null or empty.")
                 Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show()
-
-                // Optionally, navigate to the login activity here
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this, LoginActivity::class.java))  // Navigate to login screen
                 return@setOnClickListener
             }
 
             // Proceed with adding the movie to the watchlist
             Log.d("MovieDetailActivity", "Calling addToWatchlist with movieId: $movieId and token: $token")
-            addToWatchlist(movieId, token)
+            addToWatchlist(movieId, token)  // Proceed with API call
         }
+
     }
+
 
     private fun addToWatchlist(movieId: Int, token: String) {
         val apiService = ApiClient.apiService
@@ -139,18 +150,23 @@ class MovieDetailActivity : AppCompatActivity() {
                     "Bearer $token"
                 )
 
-                // Log status code and body
                 Log.d("Watchlist", "Response Code: ${response.code()}")
                 val responseBody = response.body()?.toString() ?: "No body content"
                 Log.d("Watchlist", "Response Body: $responseBody")
 
                 if (response.isSuccessful) {
-                    Log.d("Watchlist", "Success: $responseBody")
                     Toast.makeText(this@MovieDetailActivity, "Added to Watchlist! ❤️", Toast.LENGTH_SHORT).show()
                 } else {
                     val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-                    Log.e("Watchlist", "Failed! Code: ${response.code()}, Error: $errorMessage")
-                    Toast.makeText(this@MovieDetailActivity, "Failed to add to Watchlist: $errorMessage", Toast.LENGTH_LONG).show()
+                    Log.e("Watchlist", "Failed! Error: $errorMessage")
+
+                    // Check for authentication error and show login message
+                    if (errorMessage.contains("Authentication credentials were not provided", true)) {
+                        Toast.makeText(this@MovieDetailActivity, "Please log in first", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@MovieDetailActivity, LoginActivity::class.java))  // Navigate to login
+                    } else {
+                        Toast.makeText(this@MovieDetailActivity, "Failed to add to Watchlist: $errorMessage", Toast.LENGTH_LONG).show()
+                    }
                 }
 
             } catch (e: Exception) {
@@ -159,4 +175,76 @@ class MovieDetailActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun getMovieReviews(movieId: Int, token: String) {
+        val apiService = ApiClient.apiService
+
+        lifecycleScope.launch {
+            try {
+                Log.d("MovieDetailActivity", "Calling getMovieReviews with movieId: $movieId and token: $token")
+
+                val response = apiService.getMovieReviews(movieId, "Bearer $token")
+
+                Log.d("MovieDetailActivity", "Response Code: ${response.code()}")
+                Log.d("MovieDetailActivity", "Response Body: ${response.body()}")
+                Log.d("MovieDetailActivity", "Response Message: ${response.message()}")
+
+                if (response.code() == 401) {
+                    Toast.makeText(this@MovieDetailActivity, "Authentication failed. Please log in again.", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this@MovieDetailActivity, LoginActivity::class.java))
+                    return@launch
+                }
+
+                if (response.isSuccessful && response.body() != null) {
+                    val reviews = response.body()!!
+
+                    // If there are reviews, remove the placeholder and add actual reviews
+                    if (reviews.isNotEmpty()) {
+                        findViewById<TextView>(R.id.txtReview).visibility = View.GONE // Hide the "No reviews yet" placeholder
+
+                        // Add reviews dynamically to the layout
+                        reviews.forEach { review ->
+                            val reviewLayout = LinearLayout(this@MovieDetailActivity)
+                            reviewLayout.orientation = LinearLayout.HORIZONTAL
+                            reviewLayout.setPadding(16, 10, 16, 16)
+
+                            val userText = TextView(this@MovieDetailActivity)
+                            userText.text = "By: ${review.user_name}"
+                            userText.setTextColor(Color.WHITE)
+
+                            val ratingText = TextView(this@MovieDetailActivity)
+                            ratingText.text = "Rating: ${review.rating}"
+                            ratingText.setTextColor(Color.YELLOW)
+
+                            val commentText = TextView(this@MovieDetailActivity)
+                            commentText.text = "coment: ${review.comment}"
+                            commentText.setTextColor(Color.LTGRAY)
+
+                            // Add TextViews to the review layout
+                            reviewLayout.addView(userText)
+                            reviewLayout.addView(ratingText)
+                            reviewLayout.addView(commentText)
+
+                            // Add the review layout to the container
+                            reviewContainer.addView(reviewLayout)
+                        }
+                    } else {
+                        // If no reviews, show a placeholder message
+                        findViewById<TextView>(R.id.txtReview).visibility = View.VISIBLE
+                    }
+
+                } else {
+                    Toast.makeText(this@MovieDetailActivity, "Failed to load reviews", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.e("MovieDetailActivity", "Error fetching reviews: ${e.message}", e)
+                Toast.makeText(this@MovieDetailActivity, "Error fetching reviews: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+
+
+
 }

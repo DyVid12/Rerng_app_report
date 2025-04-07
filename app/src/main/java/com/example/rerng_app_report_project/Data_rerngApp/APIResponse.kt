@@ -2,6 +2,7 @@ package com.example.rerng_app_report_project.Data_rerngApp
 
 import Movie
 import com.example.rerng_app_report_project.Models_rerngApp.Movy
+import com.example.rerng_app_report_project.Models_rerngApp.Review
 import com.example.rerng_app_report_project.User
 
 class APIResponse<T>(
@@ -25,4 +26,8 @@ data class Movie(
     val release_date: String,
     val poster: String,
     val rating: Double
+)
+data class ReviewsResponse(
+    val reviews: List<Review>
+
 )

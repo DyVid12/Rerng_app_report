@@ -7,6 +7,7 @@ import com.example.rerng_app_report_project.Models_rerngApp.GenericResponse
 import com.example.rerng_app_report_project.Models_rerngApp.LoginModels
 import com.example.rerng_app_report_project.Models_rerngApp.Movy
 import com.example.rerng_app_report_project.Models_rerngApp.RegisterModels
+import com.example.rerng_app_report_project.Models_rerngApp.Review
 import com.example.rerng_app_report_project.Models_rerngApp.ReviewRequest
 import com.example.rerng_app_report_project.Models_rerngApp.ReviewResponse
 import com.example.rerng_app_report_project.Models_rerngApp.WatchlistResponse
@@ -51,13 +52,18 @@ interface ApiService {
 
 
 
-
-    @POST("movies/{movieId}/reviews/")
+    @POST("movies/{movieId}/review/")  // change "reviews" to "review"
     suspend fun submitReview(
         @Path("movieId") movieId: Int,
         @Body reviewRequest: ReviewRequest,
-        @Header("Authorization") token: String  // Authorization header with the user’s token
+        @Header("Authorization") token: String
     ): Response<ReviewResponse>
+
+    @GET("movie/{movieId}/reviews/")
+    suspend fun getMovieReviews(
+        @Path("movieId") movieId: Int,
+        @Header("Authorization") token: String
+    ): Response<List<Review>>
 
 
 

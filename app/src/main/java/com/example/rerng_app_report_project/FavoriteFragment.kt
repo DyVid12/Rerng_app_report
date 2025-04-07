@@ -19,7 +19,7 @@ class FavoriteFragment : Fragment() {
 
     private lateinit var favoriteMoviesRecyclerView: RecyclerView
     private lateinit var favoriteMoviesAdapter: FavoriteMoviesAdapter
-    private var favoriteMovies: List<Movie> = mutableListOf() // Use the correct Movie class
+    private var favoriteMovies: List<Movie> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +42,7 @@ class FavoriteFragment : Fragment() {
         val token = sharedPreferences.getString("user_token", null)
 
         // Debug: Check if the token is being retrieved
-        Log.d("SharedPreferences", "Retrieved token: $token")
+        Log.d("FavoriteFragment", "Retrieved token: $token")
 
         if (token.isNullOrEmpty()) {
             Log.e("FavoriteFragment", "User is not logged in (Token is null or empty)")

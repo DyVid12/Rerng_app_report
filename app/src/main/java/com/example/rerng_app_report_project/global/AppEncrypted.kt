@@ -27,6 +27,13 @@ class AppEncrypted private constructor(){
         }
     }
 
+    fun clearToken(context: Context) {
+        val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove("USER_TOKEN")  // Remove the token from SharedPreferences
+        editor.apply()
+    }
+
     private fun getPref(context: Context): SharedPreferences {
         val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
         return EncryptedSharedPreferences.create(
