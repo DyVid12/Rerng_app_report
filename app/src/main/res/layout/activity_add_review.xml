@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/black"
+    tools:context=".AddReviewActivity">
+
+    <!-- Rating Label -->
+    <TextView
+        android:id="@+id/ratingLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rate this movie:"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- RatingBar -->
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="10"
+        android:stepSize="0.5"
+        android:rating="0.5"
+        android:layout_marginBottom="16dp"/>
+
+
+    <!-- Review EditText -->
+    <EditText
+        android:id="@+id/etReview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Write your review..."
+        android:inputType="textMultiLine"
+        android:minLines="4"
+        android:gravity="top|start"
+        android:textColor="@color/white"
+        android:textColorHint="@color/gray"
+        android:background="@drawable/custom_edittext_bg"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit Review"
+        android:backgroundTint="@color/yellow"
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/txtReview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No reviews yet."
+        android:textSize="14sp"
+        android:textColor="#E0E0E0"
+        android:background="#1E1E1E"
+        android:elevation="2dp"
+        android:padding="10dp"
+        android:radius="10dp"
+        android:visibility="gone" />
+
+</LinearLayout>
