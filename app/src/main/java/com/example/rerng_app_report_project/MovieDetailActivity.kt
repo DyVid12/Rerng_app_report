@@ -217,7 +217,7 @@ class MovieDetailActivity : AppCompatActivity() {
                             ratingText.setTextColor(Color.YELLOW)
 
                             val commentText = TextView(this@MovieDetailActivity)
-                            commentText.text = "coment: ${review.comment}"
+                            commentText.text = "comment: ${review.comment}"
                             commentText.setTextColor(Color.LTGRAY)
 
                             // Add TextViews to the review layout

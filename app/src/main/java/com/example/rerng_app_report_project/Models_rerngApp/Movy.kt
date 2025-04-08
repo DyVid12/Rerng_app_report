@@ -11,3 +11,4 @@ data class Movy(
     val movie_detail: MovieDetail
 )
 
+

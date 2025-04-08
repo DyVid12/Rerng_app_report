@@ -1,5 +1,6 @@
 package com.example.rerng_app_report_project
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -131,16 +132,20 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // Add this function to clear the token and user session data
-    // Add this method to your ProfileFragment or wherever the logout occurs
-    fun logout() {
-        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.clear() // Clears all saved data like token and user ID
-        editor.apply()
 
-        // Redirect to login activity or wherever necessary
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish() // Optional: close current activity
+    class SessionManager(private val context: Context) {
+
+        private val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
+        fun logout() {
+            val editor = sharedPreferences.edit()
+            editor.clear() // Clears all saved data like token and user ID
+            editor.apply()
+
+            // Redirect to login activity
+            val intent = Intent(context, LoginActivity::class.java)
+            context.startActivity(intent)
+        }
     }
+
 }

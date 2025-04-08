@@ -1,6 +1,7 @@
 package com.example.rerng_app_report_project.Data_rerngApp
 
 import Movie
+import com.example.rerng_app_report_project.Models_rerngApp.MovieDetail
 import com.example.rerng_app_report_project.Models_rerngApp.Movy
 import com.example.rerng_app_report_project.Models_rerngApp.Review
 import com.example.rerng_app_report_project.User
@@ -25,7 +26,9 @@ data class Movie(
     val title: String,
     val release_date: String,
     val poster: String,
-    val rating: Double
+    val genres: List<String>?,
+    val rating: Double,
+    val movie_detail: MovieDetail
 )
 data class ReviewsResponse(
     val reviews: List<Review>

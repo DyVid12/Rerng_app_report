@@ -4,10 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FavoriteFragment">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoriteMoviesRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
+        android:layout_height="match_parent"/>
 </LinearLayout>
