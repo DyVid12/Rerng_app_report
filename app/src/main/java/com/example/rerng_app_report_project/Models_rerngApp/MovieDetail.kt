@@ -1,5 +1,7 @@
 package com.example.rerng_app_report_project.Models_rerngApp
 
+
+
 data class MovieDetail(
     val title: String,
     val release_date: String,

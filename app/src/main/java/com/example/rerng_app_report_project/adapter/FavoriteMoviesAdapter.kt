@@ -1,7 +1,6 @@
 package com.example.rerng_app_report_project.adapter
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,7 +10,6 @@ import com.example.rerng_app_report_project.Models_rerngApp.Movie
 import com.example.rerng_app_report_project.MovieDetailActivity
 import com.example.rerng_app_report_project.databinding.ViewHolderDataBinding
 import com.squareup.picasso.Picasso
-
 
 class FavoriteMoviesAdapter :
     ListAdapter<Movie, FavoriteMoviesAdapter.MovieViewHolder>(FavoriteMoviesDiffUtil) {
@@ -25,20 +23,20 @@ class FavoriteMoviesAdapter :
 
             Picasso.get().load(posterUrl).into(binding.image1)
             binding.tittlemovies.text = movie.title
-            binding.relistdate.text = movie.release_date
+            binding.relistdate.text = "Release Date: ${movie.release_date}"
             binding.movieRating.text = "⭐ ${movie.rating} /10"
 
-            // Use movie_detail for the overview and trailer_url
             binding.root.setOnClickListener { v ->
                 val context = v.context
                 val intent = Intent(context, MovieDetailActivity::class.java).apply {
                     putExtra("MOVIE_ID", movie.id)
                     putExtra("title", movie.title)
                     putExtra("release_date", movie.release_date)
-                    putExtra("overview", movie.overview ?: "No overview available")
+                    putExtra("overview", movie.movie_detail.overview ?: "No overview available")
                     putExtra("rating", movie.rating.toString())
                     putExtra("poster", posterUrl)
-                    putExtra("trailer_url", movie.trailer_url ?: "")
+                    putExtra("trailer_url", movie.movie_detail.trailer_url ?: "")
+
                 }
                 context.startActivity(intent)
             }

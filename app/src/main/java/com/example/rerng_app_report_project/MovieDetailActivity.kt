@@ -93,6 +93,7 @@ class MovieDetailActivity : AppCompatActivity() {
             }
         }
 
+
         // Handle "Back to Movie List" click
         txtBackToList.setOnClickListener {
             onBackPressed() // Go back to the previous screen
