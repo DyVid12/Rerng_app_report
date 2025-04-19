@@ -12,6 +12,7 @@ import com.example.rerng_app_report_project.MovieDetailActivity
 import com.example.rerng_app_report_project.databinding.ViewHolderDataBinding
 import com.squareup.picasso.Picasso
 
+
 class FavoriteMoviesAdapter :
     ListAdapter<Movie, FavoriteMoviesAdapter.MovieViewHolder>(FavoriteMoviesDiffUtil) {
 
@@ -22,43 +23,25 @@ class FavoriteMoviesAdapter :
             val baseUrl = "http://10.0.2.2:8000/"
             val posterUrl = if (movie.poster.startsWith("http")) movie.poster else "$baseUrl${movie.poster}"
 
-            // Log movie data for debugging
-            Log.d("FavoriteMoviesAdapter", "Binding movie: ${movie.title}")
-            Log.d("FavoriteMoviesAdapter", "Poster URL: $posterUrl")
-
-            // Load poster using Picasso
             Picasso.get().load(posterUrl).into(binding.image1)
-
-            // Ensure that overview is not null or empty
-            val overview = movie.overview?.takeIf { it.isNotEmpty() } ?: "No overview available"
-
-            val ratingValue = movie.rating ?: 0.0
-
-            // Set the data in the respective views
             binding.tittlemovies.text = movie.title
-            binding.relistdate.text = movie.release_date ?: "Unknown"
-            binding.movieRating.text = "⭐ ${ratingValue} /10"
+            binding.relistdate.text = movie.release_date
+            binding.movieRating.text = "⭐ ${movie.rating} /10"
 
-            // Set up click listener to navigate to MovieDetailActivity
-            // Inside bindMovie method of your Adapter
+            // Use movie_detail for the overview and trailer_url
             binding.root.setOnClickListener { v ->
                 val context = v.context
                 val intent = Intent(context, MovieDetailActivity::class.java).apply {
                     putExtra("MOVIE_ID", movie.id)
                     putExtra("title", movie.title)
                     putExtra("release_date", movie.release_date)
-                    putExtra("overview", movie.overview ?: "No overview available") // Accessing overview
+                    putExtra("overview", movie.overview ?: "No overview available")
                     putExtra("rating", movie.rating.toString())
-                    putExtra("poster", movie.poster)
-                    putExtra("trailer_url", movie.trailer_url ?: "") // Accessing trailer_url
+                    putExtra("poster", posterUrl)
+                    putExtra("trailer_url", movie.trailer_url ?: "")
                 }
                 context.startActivity(intent)
             }
-
-
-
-
-
         }
     }
 
@@ -75,7 +58,7 @@ class FavoriteMoviesAdapter :
 
 object FavoriteMoviesDiffUtil : DiffUtil.ItemCallback<Movie>() {
     override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-        return oldItem.id == newItem.id // Compare IDs instead of full objects
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
