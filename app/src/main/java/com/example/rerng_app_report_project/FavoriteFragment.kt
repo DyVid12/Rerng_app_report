@@ -61,7 +61,7 @@ class FavoriteFragment : Fragment() {
                     val favoriteMoviesList = apiResponse?.movies ?: emptyList()
                     favoriteMoviesAdapter.submitList(favoriteMoviesList)
                 } else {
-                    Toast.makeText(context, "Failed to load favorite movies", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Please login first !!", Toast.LENGTH_SHORT).show()
                     favoriteMoviesAdapter.submitList(emptyList())
                 }
             } catch (e: Exception) {

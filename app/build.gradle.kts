@@ -16,10 +16,38 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        flavorDimensions += "rerng_app"
+        productFlavors{
+            create("dev"){
+                dimension = "rerng_app"
+                applicationId = "com.example.rerng_app.dev"
+                resValue("string", "app_name", "rerng_app Test")
+                buildConfigField("String", "apiBaseUrl",
+                    "\"http://10.0.2.2:8000/\"")
+            }
+            create("prd"){
+                dimension = "rerng_app"
+                applicationId = "com.example.rerng_app"
+                resValue("string", "app_name", "rerng_app")
+                buildConfigField("String", "apiBaseUrl",
+                    "\"http://10.0.2.2:8000/\"")
+            }
+        }
+
+    }
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\M\\Rerng_app_report_project\\app\\rerng_app.jks")
+            storePassword = "ravit123"
+            keyAlias = "upload"
+            keyPassword = "ravit123"
+        }
     }
 
     buildTypes {
         release {
+            signingConfig = signingConfigs["release"]
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -27,9 +55,9 @@ android {
             )
         }
     }
-
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -81,3 +109,5 @@ dependencies {
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.x.x")
 }
+
+
