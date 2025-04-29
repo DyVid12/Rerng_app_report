@@ -1,0 +1,46 @@
+
+name: Android CI Build
+
+on:
+  push:
+    branches:
+      - "dev-*"
+      - "prd-*"
+
+jobs:
+  build:
+    name: Build VisitMe APK
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/leapkh/android-ci:1.0.2
+
+    env:
+      ANDROID_HOME: "/sdk"
+      GRADLE_USER_HOME: "${{ github.workspace }}/.gradle"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Decode Keystore
+        env:
+          KEYSTORE_BASE_64: ${{ secrets.KEYSTORE_BASE_64 }}
+        run: |
+          echo "$KEYSTORE_BASE_64" | base64 -d > "../rerng_app.jks"
+          ls -la ../
+
+      - name: Install Android SDK
+        run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Grant permissions for Gradle
+        run: chmod +x ./gradlew
+
+      - name: Run Gradle Build
+        run: ./gradlew assembleRelease
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: visit-me-apk
+          path: app/build/outputs/apk/release/*.apk

@@ -77,7 +77,8 @@
                 android:layout_height="wrap_content"
                 android:text="johndoe@example.com"
                 android:textSize="16sp"
-                android:textColor="#757575"
+                android:textColor="@color/light_gray"
+                android:textStyle="bold"
                 android:layout_marginTop="6dp"
                 android:gravity="center"/>
 
@@ -88,7 +89,8 @@
                 android:layout_height="wrap_content"
                 android:text="Male"
                 android:textSize="16sp"
-                android:textColor="#757575"
+                android:textColor="@color/light_gray"
+                android:textStyle="bold"
                 android:layout_marginTop="4dp"
                 android:gravity="center"/>
         </LinearLayout>
