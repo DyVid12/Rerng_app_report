@@ -1,5 +1,4 @@
-
-name: Build APK
+name: Android CI Build
 
 on:
   push:
@@ -7,12 +6,15 @@ on:
       - master
       - development
       - prd-*
+      - dev-*
       - ravit
-
 
 jobs:
   build:
+    name: Build APK
     runs-on: ubuntu-latest
+
+    # Use custom Android CI container
     container:
       image: ghcr.io/leapkh/android-ci:1.0.2
 
@@ -24,29 +26,28 @@ jobs:
       KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
     steps:
-      # Checkout code
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Decode keystore and set permissions
-      - name: Decode and save keystore
+      - name: Decode and Save Keystore
         env:
           KEYSTORE_BASE_64: ${{ secrets.KEYSTORE_BASE_64 }}
         run: echo "$KEYSTORE_BASE_64" | base64 -d > app/rerng_app.jks
 
-      # Make Gradle scripts executable
-      - name: Make Gradle scripts executable
-        run: |
-          chmod +x ./gradlew
-          chmod +x ./build.sh
+      - name: Install Android SDK (Optional if image has it)
+        run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
 
-      # Build APK
-      - name: Build APK
-        run: ./build.sh
+      - name: Grant Execution Permission to Gradle
+        run: chmod +x ./gradlew
 
-      # Upload artifact
-      - name: Upload APK
+      - name: Build APK (Release)
+        run: ./gradlew assembleRelease
+
+      - name: Copy APK to Root for Upload
+        run: cp app/build/outputs/apk/release/app-release.apk rerng_app.apk
+
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: rerng_app.apk
+          name: rerng_app
           path: rerng_app.apk
