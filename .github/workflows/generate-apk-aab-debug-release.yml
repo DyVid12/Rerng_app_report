@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build VisitMe APK
-    runs-on: ubuntu-latest  # No container; using the default GitHub-hosted runner
+    runs-on: ubuntu-latest  # GitHub-hosted runner
 
     env:
       ANDROID_HOME: "/sdk"
@@ -41,7 +41,11 @@ jobs:
       - name: Run Gradle Build
         run: ./gradlew assembleRelease
 
-      # Upload the generated APK as an artifact
+      # Debug: Check if the APK exists
+      - name: List build output directory
+        run: ls -R app/build/outputs/apk/release/
+
+      # Upload the APK if it exists
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
