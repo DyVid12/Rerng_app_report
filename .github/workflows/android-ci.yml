@@ -8,6 +8,7 @@ on:
       - prd-*
       - ravit
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,7 +31,7 @@ jobs:
       - name: Decode and save keystore
         env:
           KEYSTORE_BASE_64: ${{ secrets.KEYSTORE_BASE_64 }}
-        run: echo "$KEYSTORE_BASE_64" | base64 -d > app/easy_rent.jks
+        run: echo "$KEYSTORE_BASE_64" | base64 -d > app/rerng_app.jks
 
       # Make Gradle scripts executable
       - name: Make Gradle scripts executable
