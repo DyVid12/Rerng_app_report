@@ -12,14 +12,10 @@ on:
 jobs:
   build:
     name: Build APK
-    runs-on: ubuntu-latest
-
-    # Use custom Android CI container
-    container:
-      image: ghcr.io/leapkh/android-ci:1.0.2
+    runs-on: ubuntu-latest  # ✅ Default GitHub runner with internet access
 
     env:
-      ANDROID_HOME: /sdk
+      ANDROID_HOME: /usr/local/lib/android/sdk
       GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
@@ -34,16 +30,23 @@ jobs:
           KEYSTORE_BASE_64: ${{ secrets.KEYSTORE_BASE_64 }}
         run: echo "$KEYSTORE_BASE_64" | base64 -d > app/rerng_app.jks
 
-      - name: Install Android SDK (Optional if image has it)
-        run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
 
-      - name: Grant Execution Permission to Gradle
+      - name: Install Android SDK components
+        run: |
+          sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+
+      - name: Grant Execution Permission
         run: chmod +x ./gradlew
 
-      - name: Build APK (Release)
+      - name: Build APK
         run: ./gradlew assembleRelease
 
-      - name: Copy APK to Root for Upload
+      - name: Copy APK to root
         run: cp app/build/outputs/apk/release/app-release.apk rerng_app.apk
 
       - name: Upload APK Artifact
