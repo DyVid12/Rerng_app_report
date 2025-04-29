@@ -11,67 +11,45 @@ on:
 
 jobs:
   build:
-    name: Build VisitMe APK
-    runs-on: ubuntu-latest  # ✅ Default GitHub runner with internet access
+    name: Build APK
+    runs-on: ubuntu-latest
 
     env:
       ANDROID_HOME: /usr/local/lib/android/sdk
       GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
-      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
     steps:
-      # Checkout the code from your repository
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Decode the keystore from the secrets and store it
-      - name: Decode and Save Keystore
-        env:
-          KEYSTORE_BASE_64: ${{ secrets.KEYSTORE_BASE_64 }}
-        run: echo "$KEYSTORE_BASE_64" | base64 -d > app/rerng_app.jks
-
-      # Set up Java (JDK) for building the APK
-      - name: Set up JDK
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
 
-      # Install Android SDK components
-      - name: Install Android SDK components
+      - name: Install Android SDK Command-line Tools
+        run: |
+          yes | sdkmanager --install "cmdline-tools;latest"
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
+
+      - name: Accept Android Licenses
+        run: |
+          mkdir -p $ANDROID_HOME/licenses
+          echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > $ANDROID_HOME/licenses/android-sdk-license
+
+      - name: Install Android SDK Components
         run: |
           sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
-      # Grant execution permissions for Gradle scripts
-      - name: Grant Execution Permission
+      - name: Make Gradlew Executable
         run: chmod +x ./gradlew
 
-      # Run Gradle build to generate the APK
-      - name: Build APK
+      - name: Build APK (Release)
         run: ./gradlew assembleRelease
 
-      # Debug: List files to verify APK location
-      - name: List build output directory
-        run: ls -R app/build/outputs/apk/release/
-
-      # Check if APK exists before copying and uploading it
-      - name: Check if APK exists
-        id: check_apk
-        run: |
-          if [ -f app/build/outputs/apk/release/app-release.apk ]; then
-            echo "APK exists"
-            echo "APK_PATH=app/build/outputs/apk/release/app-release.apk" >> $GITHUB_ENV
-          else
-            echo "APK not found!"
-            exit 1
-          fi
-
-      # Upload APK Artifact if exists
       - name: Upload APK Artifact
-        if: env.APK_PATH != ''
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: rerng_app
-          path: ${{ env.APK_PATH }}
+          name: app-release
+          path: app/build/outputs/apk/release/app-release.apk
