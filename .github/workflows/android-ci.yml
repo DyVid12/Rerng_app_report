@@ -6,7 +6,6 @@ on:
       - "dev-*"
       - "prd-*"
       - "master"
-      - "development"
       - "ravit"
 
 permissions:
