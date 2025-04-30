@@ -30,11 +30,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Step 2: Decode and save the keystore from secrets (base64 encoded)
-      - name: Decode and Save Keystore
-        env:
-          KEYSTORE_BASE_64: ${{ secrets.KEYSTORE_BASE_64 }}
-        run: echo "$KEYSTORE_BASE_64" | base64 -d > app/rerng_app.jks
+      # Step 2: Save Keystore file directly from GitHub Secrets
+      - name: Save Keystore
+        run: echo "${{ secrets.KEYSTORE_FILE }}" > app/rerng_app.jks
 
       # Step 3: Set up JDK 17 for Android build
       - name: Set up JDK
