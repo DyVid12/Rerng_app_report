@@ -38,24 +38,25 @@ android {
     }
     signingConfigs {
         create("release") {
-            storeFile = file("app/rerng_app.jks")
-            storePassword = System.getenv("KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS")
-            keyPassword = System.getenv("KEY_PASSWORD")
+            storeFile = file("app/rerng_app.jks")  // Location of the keystore file
+            storePassword = System.getenv("KEYSTORE_PASSWORD")  // Password for keystore from GitHub secrets
+            keyAlias = System.getenv("KEY_ALIAS")  // Key alias from GitHub secrets
+            keyPassword = System.getenv("KEY_PASSWORD")  // Key password from GitHub secrets
         }
     }
 
 
     buildTypes {
         release {
-            signingConfig = signingConfigs["release"]
-            isMinifyEnabled = false
+            signingConfig = signingConfigs["release"]  // Linking the release signing configuration
+            isMinifyEnabled = false  // Disables ProGuard (can be enabled if needed)
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro"  // Add any ProGuard rules here if needed
             )
         }
     }
+
     buildFeatures {
         viewBinding = true
         buildConfig = true
