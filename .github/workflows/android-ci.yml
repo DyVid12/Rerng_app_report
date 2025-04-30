@@ -28,33 +28,37 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      # Decode the keystore from base64 and save it as app/rerng_app.jks
       - name: Decode and Save Keystore
         env:
           KEYSTORE_BASE_64: ${{ secrets.KEYSTORE_BASE_64 }}
         run: echo "$KEYSTORE_BASE_64" | base64 -d > app/rerng_app.jks
 
+      # Set up JDK 17 for Android build
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
 
-
-
+      # Install Android SDK components
       - name: Install Android SDK components
         run: |
           sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
+      # Grant execution permission for Gradle wrapper
       - name: Grant Execution Permission
         run: chmod +x ./gradlew
 
+      # Build APK (Release version)
       - name: Build APK
         run: ./gradlew assembleRelease
 
+      # Debug build output to confirm APK creation
       - name: Debug build output
         run: ls -R app/build/outputs/
 
-
+      # Copy the APK to the root of the repository
       - name: Copy APK to root
         run: |
           if [ -f app/build/outputs/apk/release/app-release.apk ]; then
@@ -64,6 +68,7 @@ jobs:
             exit 1
           fi
 
+      # Upload APK as an artifact
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
