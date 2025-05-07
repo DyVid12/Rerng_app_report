@@ -24,7 +24,7 @@ jobs:
           distribution: 'adoptopenjdk'
 
       - name: Decode keystore from base64
-        run: echo "${{ secrets.KEYSTORE_BASE_64 }}" | tr -d '\n' | base64 -d > app/rerng_app.jks
+        run: echo "${{ secrets.KEYSTORE_BASE_64 }}" | tr -d '\n' | base64 --decode > app/rerng_app.jks
 
       # Set up Android SDK
       - name: Set up Android SDK
