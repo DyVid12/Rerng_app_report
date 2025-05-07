@@ -4,47 +4,36 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout your code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Java
+      - name: Decode keystore from base64 and save it to the file system
+        run: echo "${{ secrets.KEYSTORE_BASE_64 }}" | base64 -d > app/rerng_app.jks
+
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           java-version: '11'
-          distribution: 'adopt'
 
-      # ✅ Step 3: Decode keystore from GitHub secret
-      - name: Decode keystore from base64
-        run: echo "${{ secrets.KEYSTORE_BASE_64 }}" | base64 -d > app/rerng_app.jks
-
-      # Step 4: Set up Android SDK
-      - name: Set up Android SDK
-        uses: reactivecircus/android-sdk-manager-action@v2
-        with:
-          sdk-version: 'commandlinetools-latest'
-
-      # Step 5: Give permission to gradlew
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
-      # Step 6: Build release APK
       - name: Build APK
         run: ./gradlew assembleRelease
 
-      # Step 7: Upload the built APK
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v3
+      - name: Sign APK with Keystore
+        run: |
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore app/rerng_app.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_ALIAS_PASSWORD }} app/build/outputs/apk/release/app-release-unsigned.apk ${{ secrets.KEY_ALIAS }}
+
+      - name: Zipalign APK
+        run: |
+          zipalign -v 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload Signed APK
+        uses: actions/upload-artifact@v2
         with:
-          name: app-release.apk
+          name: signed-apk
           path: app/build/outputs/apk/release/app-release.apk
