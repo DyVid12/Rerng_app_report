@@ -13,37 +13,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout your code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up JDK (ensure it's the correct version)
+      # Step 2: Set up Java
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '11'  # Adjust Java version as needed
-          distribution: 'adoptopenjdk'
+          java-version: '11'
+          distribution: 'adopt'
 
+      # ✅ Step 3: Decode keystore from GitHub secret
       - name: Decode keystore from base64
-        run: echo "${{ secrets.KEYSTORE_BASE_64 }}" | tr -d '\n' | base64 --decode > app/rerng_app.jks
+        run: echo "${{ secrets.KEYSTORE_BASE_64 }}" | base64 -d > app/rerng_app.jks
 
-      # Set up Android SDK
+      # Step 4: Set up Android SDK
       - name: Set up Android SDK
         uses: reactivecircus/android-sdk-manager-action@v2
         with:
-          sdk-version: 'commandlinetools-linux-6609375_latest'
+          sdk-version: 'commandlinetools-latest'
 
-      # Build the APK
+      # Step 5: Give permission to gradlew
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      # Step 6: Build release APK
       - name: Build APK
         run: ./gradlew assembleRelease
 
-      # Sign the APK
-      - name: Sign APK
-        run: |
-          cp app/rerng_app.jks ~/.android/debug.keystore
-          ./gradlew signingReport
-          ./gradlew assembleRelease
-
-      # Upload the APK as an artifact (optional)
+      # Step 7: Upload the built APK
       - name: Upload APK artifact
         uses: actions/upload-artifact@v3
         with:

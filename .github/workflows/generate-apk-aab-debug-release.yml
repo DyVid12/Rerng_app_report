@@ -1,8 +1,10 @@
-name: Android CI Build
+name: Build and Sign APK
 
 on:
   push:
-    branches: [ "dev-*", "prd-*", "master", "development", "ravit" ]
+    branches: [ "main", "dev-*", "prd-*", "master", "development", "ravit" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -12,17 +14,16 @@ jobs:
       GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
     steps:
-      # Checkout code
-      - uses: actions/checkout@v4
+      # Checkout source code
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # Decode keystore from secrets and save it to the project
+      # Decode keystore (base64 -w 0 should have been used when encoding)
       - name: Decode and Save Keystore
-        env:
-          KEYSTORE_BASE_64: ${{ secrets.KEYSTORE_BASE_64 }}
-        run: echo "$KEYSTORE_BASE_64" | base64 -d > app/rerng_app.jks
+        run: echo "${{ secrets.KEYSTORE_BASE_64 }}" | base64 --decode > app/rerng_app.jks
 
       # Set up JDK 17
       - name: Set up JDK 17
@@ -40,28 +41,27 @@ jobs:
           mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
           echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
 
-      # Accept Android SDK licenses
+      # Accept SDK Licenses
       - name: Accept Licenses
         run: |
           yes | sdkmanager --licenses || true
           mkdir -p $ANDROID_HOME/licenses
-          echo -e "24333f8a63b6825ea9c5514f83c2829b004d1fee" > $ANDROID_HOME/licenses/android-sdk-license
+          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > $ANDROID_HOME/licenses/android-sdk-license
 
-      # Install necessary SDK components
+      # Install SDK components
       - name: Install SDK Components
-        run: |
-          sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+        run: sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
-      # Grant execute permissions to Gradle wrapper
-      - name: Grant Gradle Permissions
+      # Make gradlew executable
+      - name: Grant execute permission to Gradle
         run: chmod +x ./gradlew
 
-      # Build Release APK (this uses the keystore for signing)
-      - name: Build Release APK
+      # Build signed release APK
+      - name: Build signed APK
         run: ./gradlew assembleRelease
 
       # Upload APK artifact
-      - name: Upload Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
