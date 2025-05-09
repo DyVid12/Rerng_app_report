@@ -1,50 +1,53 @@
-
-name: Build APK
+name: Build and Sign APK
 
 on:
   push:
     branches:
-      - development
-      - prd-*
-      - ravit
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/leapkh/android-ci:1.0.2
-
-    env:
-      ANDROID_HOME: /sdk
-      GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
-      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
     steps:
-      # Checkout code
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      # Decode keystore and set permissions
-      - name: Decode and save keystore
-        env:
-          KEYSTORE_BASE_64: ${{ secrets.KEYSTORE_BASE_64 }}
-        run: echo "$KEYSTORE_BASE_64" | base64 -d > app/easy_rent.jks
+      - name: Decode keystore from base64 and save it
+        run: echo "${{ secrets.KEYSTORE_BASE_64 }}" | base64 --decode > app/app/rerng_app.jks
 
-      # Make Gradle scripts executable
-      - name: Make Gradle scripts executable
-        run: |
-          chmod +x ./gradlew
-          chmod +x ./build.sh
-
-      # Build APK
-      - name: Build APK
-        run: ./build.sh
-
-      # Upload artifact
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
         with:
-          name: rerng_app.apk
-          path: rerng_app.apk
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Make Gradle executable
+        run: chmod +x ./gradlew
+
+      - name: Build APK (Release)
+        run: ./gradlew assembleRelease
+
+      - name: Sign APK with Keystore
+        run: |
+          jarsigner \
+            -verbose \
+            -sigalg SHA256withRSA \
+            -digestalg SHA-256 \
+            -keystore app/rerng_app.jks \
+            -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
+            -keypass ${{ secrets.KEY_PASSWORD }} \
+            app/build/outputs/apk/release/app-release-unsigned.apk \
+            ${{ secrets.KEY_ALIAS }}
+
+      - name: Zipalign APK
+        run: |
+          zipalign -v 4 \
+            app/build/outputs/apk/release/app-release-unsigned.apk \
+            app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload Signed APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: signed-apk
+          path: app/build/outputs/apk/release/app-release.apk
